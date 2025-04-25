@@ -1,0 +1,48 @@
+services:
+  n8n:
+    image: n8nio/n8n
+    ports:
+      - "5678:443"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=xarty
+      - N8N_BASIC_AUTH_PASSWORD=Ex239763251
+      - N8N_HOST=c28f-46-246-88-84.ngrok-free.app
+      - N8N_PORT=443
+      - N8N_PROTOCOL=https
+      - WEBHOOK_TUNNEL_URL=https://c28f-46-246-88-84.ngrok-free.app
+      - DB_TYPE=postgres
+      - DB_POSTGRES_HOST=postgres
+      - DB_POSTGRES_PORT=5432
+      - DB_POSTGRES_DATABASE=n8n
+      - DB_POSTGRES_USER=n8n
+      - DB_POSTGRES_PASSWORD=n8n
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+    depends_on:
+      - postgres
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: n8n
+      POSTGRES_DB: n8n
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+
+volumes:
+  ollama:
